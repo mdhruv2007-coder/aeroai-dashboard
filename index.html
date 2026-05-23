@@ -598,20 +598,36 @@ async function testConnection() {
   chip.style.color = 'var(--gold)';
 
   try {
-    const res = await fetch(`${cfUrl}/health`, {
-      headers: { 'X-API-Key': apiKey }
+    // Step 1: health check — is the server reachable?
+    const healthRes = await fetch(`${cfUrl}/health`);
+    if (!healthRes.ok) throw new Error(`Server unreachable (HTTP ${healthRes.status})`);
+
+    // Step 2: auth probe — is the API key valid?
+    statusEl.textContent = '⏳ Validating key…';
+    const authRes = await fetch(`${cfUrl}/v1/predict`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+      body: JSON.stringify({ m: 2, p: 4, t: 12, aoa: 6.0, re: 1000000 })
     });
-    if (res.ok) {
-      API_CONNECTED = true;
-      statusEl.style.color = 'var(--green)';
-      statusEl.textContent = '✅ Connected — backend healthy';
-      chip.textContent = '✅ API Connected · MVP1';
-      chip.style.color = 'var(--green)';
-      if (statOnnx) { statOnnx.textContent = '✅ API live'; statOnnx.style.color = 'var(--green)'; }
-      toast('✅ Backend connected');
-    } else {
-      throw new Error(`HTTP ${res.status}`);
+
+    if (authRes.status === 401) {
+      API_CONNECTED = false;
+      statusEl.style.color = 'var(--red)';
+      statusEl.textContent = '✗ Invalid API key';
+      chip.textContent = '✗ Auth failed — bad key';
+      chip.style.color = 'var(--red)';
+      toast('✗ Invalid API key — check and retry');
+      return;
     }
+    if (!authRes.ok) throw new Error(`Auth probe failed (HTTP ${authRes.status})`);
+
+    API_CONNECTED = true;
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = '✅ Connected & authenticated';
+    chip.textContent = '✅ API Connected · MVP1';
+    chip.style.color = 'var(--green)';
+    if (statOnnx) { statOnnx.textContent = '✅ API live'; statOnnx.style.color = 'var(--green)'; }
+    toast('✅ Backend connected & key verified');
   } catch (err) {
     API_CONNECTED = false;
     statusEl.style.color = 'var(--red)';
