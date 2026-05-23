@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AERO.AI v4 â€” Premium Concept</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030712; 
+  --s1: rgba(17, 24, 39, 0.7); 
+  --s2: rgba(31, 41, 55, 0.6); 
+  --s3: rgba(55, 65, 81, 0.5);
+  --b1: rgba(255, 255, 255, 0.08); 
+  --b2: rgba(255, 255, 255, 0.12); 
+  --b3: rgba(255, 255, 255, 0.2);
+  --tx: #f8fafc; --mt: #94a3b8; --mt2: #64748b;
+  --green: #10b981; --green-bg: rgba(16, 185, 129, 0.15);
+  --blue: #3b82f6; --blue-bg: rgba(59, 130, 246, 0.15);
+  --gold: #f59e0b; --gold-bg: rgba(245, 158, 11, 0.15);
+  --red: #ef4444; --cyan: #06b6d4;
+  --ff: 'Inter', sans-serif; --fm: 'JetBrains Mono', monospace;
+  --r: 12px; --rl: 16px;
+  --glow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --border: 1px solid rgba(255, 255, 255, 0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg); color: var(--tx); font-family: var(--ff); overflow: hidden; -webkit-font-smoothing: antialiased; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+.shell { display: grid; grid-template-columns: 380px 1fr; grid-template-rows: 64px 1fr; height: 100vh; position: relative; z-index: 1; }
+.shell::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 15% 50%, rgba(16,185,129,0.06), transparent 50%), radial-gradient(circle at 85% 30%, rgba(59,130,246,0.06), transparent 50%); z-index: -1; pointer-events: none; }
+
+.hdr { grid-column: 1/-1; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(20px); border-bottom: var(--border); z-index: 10; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+.hdr-l { display: flex; align-items: center; gap: 16px; }
+.logo { width: 42px; height: 42px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.4); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), transparent); box-shadow: 0 0 20px rgba(16,185,129,0.15); }
+.logo svg { width: 24px; height: 24px; fill: none; stroke: var(--green); stroke-width: 2.5; }
+.htitle { font-family: var(--ff); font-size: 18px; font-weight: 700; letter-spacing: 0.05em; color: #fff; text-shadow: 0 0 15px rgba(16,185,129,0.3); }
+.hsub { font-size: 12px; color: var(--mt); font-weight: 500; letter-spacing: 0.02em; margin-top: 2px; }
+.hdr-r { display: flex; gap: 12px; }
+.chip { font-size: 11px; font-weight: 600; padding: 8px 16px; border-radius: 20px; display: flex; align-items: center; }
+.chip-g { background: var(--green-bg); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.chip-b { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+.chip-gold { background: var(--gold-bg); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+
+.sidebar { background: var(--s1); backdrop-filter: blur(24px); border-right: var(--border); overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; box-shadow: 10px 0 30px rgba(0,0,0,0.3); z-index: 5; }
+.sec-title { font-size: 11px; font-weight: 700; color: var(--mt); letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.sec-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--b2), transparent); }
+
+.naca-input-wrap { position: relative; background: var(--s2); border: var(--border); border-radius: var(--r); padding: 18px; text-align: center; transition: all 0.3s ease; box-shadow: var(--glow); }
+.naca-input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+.naca-display { font-family: var(--ff); font-size: 40px; font-weight: 800; color: var(--tx); }
+.naca-display span { color: var(--green); }
+.naca-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 40px; width: 100%; height: 100%; text-align: center; }
+
+.ctrl { background: var(--s2); border: var(--border); border-radius: var(--r); padding: 16px; position: relative; }
+.ctrl-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.ctrl-label { font-size: 12px; font-weight: 600; color: var(--mt); }
+.ctrl-val { font-size: 13px; font-weight: 700; color: var(--tx); font-family: var(--fm); background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px; }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; outline: none; transition: 0.2s; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 4px solid var(--green); cursor: pointer; box-shadow: 0 0 10px rgba(16,185,129,0.5); transition: 0.2s; }
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: 0 0 15px rgba(16,185,129,0.8); }
+
+.mode-toggle { display: flex; gap: 8px; background: rgba(0,0,0,0.2); padding: 6px; border-radius: var(--r); }
+.mode-btn { flex: 1; padding: 10px; font-size: 12px; font-weight: 600; border-radius: 8px; color: var(--mt); text-align: center; cursor: pointer; transition: 0.3s; }
+.mode-btn.active { background: var(--s3); color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+
+.presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.preset-btn { padding: 10px 4px; font-size: 11px; font-weight: 600; border-radius: var(--r); border: var(--border); background: var(--s2); color: var(--tx); cursor: pointer; transition: 0.2s; }
+.preset-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--b3); transform: translateY(-2px); }
+
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.mc { background: var(--s2); border: var(--border); border-radius: var(--r); padding: 16px; position: relative; transition: 0.3s; box-shadow: var(--glow); overflow: hidden; }
+.mc:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); border-color: var(--b3); }
+.mc::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.mc-g::before { background: var(--green); box-shadow: 0 0 15px var(--green); }
+.mc-b::before { background: var(--blue); box-shadow: 0 0 15px var(--blue); }
+.mc-gold::before { background: var(--gold); box-shadow: 0 0 15px var(--gold); }
+.mc-r::before { background: var(--red); box-shadow: 0 0 15px var(--red); }
+.mc-label { font-size: 11px; font-weight: 700; color: var(--mt); text-transform: uppercase; margin-bottom: 8px; }
+.mc-val { font-size: 26px; font-weight: 800; font-family: var(--fm); line-height: 1; transition: color 0.3s; }
+.mc-sub { font-size: 11px; color: var(--mt2); margin-top: 6px; }
+.cg { color: var(--green); } .cb { color: var(--blue); } .cgo { color: var(--gold); } .cr { color: var(--red); }
+
+.run-btn { width: 100%; padding: 14px; font-family: var(--ff); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-radius: var(--r); border: none; background: linear-gradient(135deg, #10b981, #059669); color: #fff; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(16,185,129,0.3); margin-bottom: 12px; }
+.run-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,185,129,0.5); filter: brightness(1.1); }
+.copy-btn, .screenshot-btn { width: 100%; padding: 12px; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; border-radius: var(--r); border: var(--border); background: var(--s2); color: var(--tx); cursor: pointer; transition: 0.2s; margin-bottom: 8px; }
+.copy-btn:hover, .screenshot-btn:hover { background: var(--s3); border-color: rgba(255,255,255,0.2); }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; background: rgba(0,0,0,0.2); padding: 6px; border-radius: var(--r); }
+.tab-btn { flex: 1; padding: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; border-radius: 8px; border: none; background: transparent; color: var(--mt); cursor: pointer; transition: 0.3s; }
+.tab-btn.on { background: rgba(255,255,255,0.1); color: var(--tx); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.tab-panel { display: none; margin-top: 10px; } .tab-panel.on { display: block; animation: fade 0.4s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: var(--r); margin-bottom: 8px; background: var(--s2); border: var(--border); cursor: pointer; transition: 0.2s; }
+.history-item:hover { transform: translateX(4px); border-color: var(--green); background: rgba(16,185,129,0.05); }
+.history-item.best { border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.08); }
+.hi-naca { font-family: var(--ff); font-size: 13px; font-weight: 700; }
+.hi-stats { font-size: 11px; color: var(--mt); margin-top: 4px; }
+.hi-cl { font-size: 14px; font-weight: 700; font-family: var(--fm); }
+
+.viewport { position: relative; background: radial-gradient(circle at center, #111827 0%, #030712 100%); overflow: hidden; }
+#three-canvas { width: 100%; height: 100%; outline: none; }
+
+.hud { position: absolute; pointer-events: none; }
+.hud-tl { top: 24px; left: 24px; } .hud-tr { top: 24px; right: 24px; }
+.hud-bl { bottom: 24px; left: 24px; } .hud-br { bottom: 24px; right: 24px; }
+
+.hud-box { background: rgba(3, 7, 18, 0.6); border: var(--border); border-radius: var(--r); padding: 16px 20px; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); min-width: 170px; }
+.hud-title { font-size: 11px; font-weight: 700; color: var(--mt); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--b1); }
+.hud-stat { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.hud-stat:last-child { margin-bottom: 0; }
+.hud-key { font-size: 12px; color: var(--mt); font-weight: 500; }
+.hud-num { font-family: var(--fm); font-size: 15px; font-weight: 700; text-shadow: 0 0 10px rgba(255,255,255,0.1); }
+
+.view-controls { display: flex; flex-direction: column; gap: 8px; pointer-events: all; }
+.vc-btn { width: 48px; height: 48px; border-radius: 12px; border: var(--border); background: rgba(3, 7, 18, 0.6); color: var(--tx); cursor: pointer; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: 0.3s; backdrop-filter: blur(12px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.vc-btn:hover { border-color: var(--green); color: var(--green); transform: translateX(-4px); box-shadow: 0 4px 20px rgba(16,185,129,0.2); }
+.vc-btn.active { border-color: var(--cyan); color: var(--cyan); }
+
+.flow-toggle { pointer-events: all; display: flex; gap: 8px; flex-wrap: wrap; background: rgba(3, 7, 18, 0.6); padding: 10px; border-radius: var(--r); backdrop-filter: blur(12px); border: var(--border); }
+.ft-btn { padding: 8px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; cursor: pointer; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--mt); transition: 0.2s; }
+.ft-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.ft-btn:hover:not(.active) { color: var(--tx); background: rgba(255,255,255,0.05); }
+
+.pressure-legend { pointer-events: none; display: flex; flex-direction: column; gap: 8px; margin-top: 16px; background: rgba(3, 7, 18, 0.6); padding: 14px; border-radius: var(--r); backdrop-filter: blur(12px); border: var(--border); }
+.pressure-bar { width: 220px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #3b82f6, #06b6d4, #10b981, #f59e0b, #ef4444); box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+.pressure-label { font-size: 10px; color: var(--mt); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display:flex; justify-content:space-between; width: 100%;}
+
+.loading { position: absolute; inset: 0; background: rgba(3, 7, 18, 0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; transition: opacity 0.5s ease; backdrop-filter: blur(10px); }
+.loading.hidden { opacity: 0; pointer-events: none; }
+.load-ring { width: 64px; height: 64px; border: 3px solid var(--b2); border-top-color: var(--green); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 24px; box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-text { font-size: 13px; font-weight: 700; color: var(--tx); letter-spacing: 0.2em; text-transform: uppercase; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 30px; padding: 14px 28px; font-size: 13px; font-weight: 600; color: var(--green); opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 999; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.coord-display { position: absolute; bottom: 84px; right: 24px; pointer-events: none; font-size: 12px; color: var(--mt); font-family: var(--fm); background: rgba(3, 7, 18, 0.6); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); border: var(--border); }
+.kb-hints { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); pointer-events: none; display: flex; gap: 8px; opacity: 0; transition: opacity 0.5s; z-index: 50; }
+.kb-hints.show { opacity: 1; }
+.kb-hint { font-size: 11px; font-weight: 600; color: var(--tx); background: rgba(3, 7, 18, 0.7); border: var(--border); border-radius: 8px; padding: 8px 12px; backdrop-filter: blur(12px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.kb-hint kbd { color: var(--green); font-family: var(--fm); margin-right: 6px; background: rgba(16,185,129,0.15); padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="logo"><svg viewBox="0 0 22 22"><path d="M2 17Q6 7 11 6Q16 5 20 10"/><path d="M2 17Q6 14 11 13Q16 12 20 10"/></svg></div>
+    <div>
+      <div class="htitle">AERO.AI</div>
+      <div class="hsub">APEX.AI · MVP1 · MultiFidelityAeroAI · aero_ai_v2.0_multifidelity</div>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <div class="chip chip-gold">Cd R²=0.9247 · Gate 3 ✅ · MultiFidelity</div>
+    <div class="chip chip-g" id="model-status-chip">⚪ Awaiting Connection</div>
+    <div class="chip chip-b" id="inference-badge" style="display:none">⚡ —</div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <!-- Connection Panel -->
+  <div class="sec-title">API Connection</div>
+  <div id="conn-panel" style="background:var(--s2);border:var(--border);border-radius:var(--r);padding:14px;margin-bottom:4px;">
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--mt);letter-spacing:.08em;margin-bottom:5px">CF TUNNEL URL</div>
+      <input id="cf-url" type="text" placeholder="https://xxxx.trycloudflare.com"
+        style="width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--b2);border-radius:8px;
+               padding:8px 10px;font-family:var(--fm);font-size:11px;color:var(--tx);outline:none;
+               transition:border-color .2s"
+        onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'">
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--mt);letter-spacing:.08em;margin-bottom:5px">API KEY</div>
+      <input id="api-key" type="password" placeholder="AEROAI-XXXX-XXXXXXXX"
+        style="width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--b2);border-radius:8px;
+               padding:8px 10px;font-family:var(--fm);font-size:11px;color:var(--tx);outline:none;
+               transition:border-color .2s"
+        onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'">
+    </div>
+    <button onclick="testConnection()"
+      style="width:100%;padding:10px;font-size:12px;font-weight:700;letter-spacing:.08em;
+             text-transform:uppercase;border-radius:8px;border:1px solid var(--b2);
+             background:var(--s3);color:var(--tx);cursor:pointer;transition:.2s"
+      onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'"
+      onmouseout="this.style.borderColor='var(--b2)';this.style.color='var(--tx)'">
+      ⚡ Test Connection
+    </button>
+    <div id="conn-status" style="margin-top:10px;font-size:11px;font-family:var(--fm);
+      text-align:center;letter-spacing:.06em;min-height:16px"></div>
+  </div>
+
+  <div class="sec-title">Wing Configuration</div>
+  <div style="display:flex;gap:6px;margin-bottom:10px">
+    <input id="naca-search" type="text" maxlength="4" placeholder="e.g. 4412"
+      style="flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);
+             padding:7px 10px;font-family:var(--fm);font-size:12px;color:var(--tx);outline:none;transition:border-color .2s"
+      oninput="searchNaca(this.value)"
+      onfocus="this.style.borderColor='var(--green)'"
+      onblur="this.style.borderColor='var(--b2)'"
+      onkeydown="if(event.key==='Enter')applyNaca(this.value)">
+    <button onclick="applyNaca(document.getElementById('naca-search').value)"
+      style="padding:7px 12px;background:rgba(0,232,138,.1);border:1px solid var(--green);
+             border-radius:var(--r);color:var(--green);font-family:var(--fm);font-size:14px;
+             cursor:pointer;letter-spacing:.06em">GO</button>
+  </div>
+  <div id="naca-suggestions" style="margin-bottom:8px;display:none">
+    <div style="font-size:12px;color:var(--mt);margin-bottom:4px;letter-spacing:.08em">SUGGESTIONS</div>
+    <div id="naca-sugg-list" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+  </div>
+  <div class="naca-input-wrap">
+    <div class="naca-display" id="naca-display">NACA <span id="naca-show">9422</span></div>
+    <input class="naca-input" id="naca-input" type="text" maxlength="4"
+           value="9422" placeholder="4412" oninput="onNacaChange(this.value)">
+  </div>
+
+  <!-- Presets -->
+  <div class="sec-title">Quick Presets</div>
+  <div class="presets">
+    <button class="preset-btn" onclick="loadPreset('downforce')">⬇ Max<br>Downforce</button>
+    <button class="preset-btn" onclick="loadPreset('lowdrag')">➤ Low<br>Drag</button>
+    <button class="preset-btn" onclick="loadPreset('balanced')">⚖ Balanced</button>
+    <button class="preset-btn" onclick="loadPreset('f1')">F1<br>Wing</button>
+    <button class="preset-btn" onclick="loadPreset('gt3')">GT3<br>Rear</button>
+    <button class="preset-btn" onclick="loadPreset('lmp')">LMP2<br>Hi-D</button>
+  </div>
+
+  <!-- Mode -->
+  <div class="mode-toggle">
+    <div class="mode-btn active" id="mode-rear" onclick="setMode('rear')">Rear Wing</div>
+    <div class="mode-btn" id="mode-front" onclick="setMode('front')">Front Wing</div>
+  </div>
+
+  <!-- Sliders -->
+  <div class="ctrl">
+    <div class="ctrl-head"><span class="ctrl-label">Angle of Attack</span><span class="ctrl-val" id="v-aoa">8.0°</span></div>
+    <input type="range" min="-2" max="14" step="0.5" value="8" id="sl-aoa" oninput="onSlider()">
+  </div>
+  <div class="ctrl">
+    <div class="ctrl-head"><span class="ctrl-label">Reynolds Number</span><span class="ctrl-val" id="v-re">1.00M</span></div>
+    <input type="range" min="300000" max="1700000" step="50000" value="1000000" id="sl-re" oninput="onSlider()">
+    <div style="display:flex;gap:3px;margin-top:5px" id="re-chips">
+      <button onclick="setRe(500000)" class="preset-btn" style="flex:1;padding:4px 2px;font-size:11px">0.5M</button>
+      <button onclick="setRe(1000000)" class="preset-btn" style="flex:1;padding:4px 2px;font-size:11px">1.0M</button>
+      <button onclick="setRe(1300000)" class="preset-btn" style="flex:1;padding:4px 2px;font-size:11px">1.3M</button>
+      <button onclick="setRe(1700000)" class="preset-btn" style="flex:1;padding:4px 2px;font-size:11px">1.7M</button>
+    </div>
+  </div>
+  <div class="ctrl">
+    <div class="ctrl-head"><span class="ctrl-label">Velocity</span><span class="ctrl-val" id="v-vel">60 m/s</span></div>
+    <input type="range" min="20" max="120" step="1" value="60" id="sl-vel" oninput="onSlider()">
+  </div>
+  <div class="ctrl">
+    <div class="ctrl-head"><span class="ctrl-label">Chord</span><span class="ctrl-val" id="v-chord">0.30 m</span></div>
+    <input type="range" min="0.1" max="0.6" step="0.01" value="0.3" id="sl-chord" oninput="onSlider()">
+  </div>
+  <div class="ctrl">
+    <div class="ctrl-head"><span class="ctrl-label">Span</span><span class="ctrl-val" id="v-span">1.00 m</span></div>
+    <input type="range" min="0.2" max="2.0" step="0.05" value="1.0" id="sl-span" oninput="onSlider()">
+  </div>
+  <div class="ctrl" id="rh-ctrl" style="display:none">
+    <div class="ctrl-head"><span class="ctrl-label">Ride Height</span><span class="ctrl-val" id="v-rh">50 mm</span></div>
+    <input type="range" min="10" max="120" step="5" value="50" id="sl-rh" oninput="onSlider()">
+  </div>
+
+  <!-- Metrics -->
+  <div id="ai-source-badge" style="text-align:center;margin-bottom:6px;
+    font-size:12px;letter-spacing:.08em;padding:3px 8px;border-radius:4px;
+    background:rgba(0,136,255,.06);border:1px solid rgba(0,136,255,.2);
+    color:var(--blue);display:inline-block;width:100%" id="ai-source-badge">
+    ⚪ NEURAL SURROGATE · Run Prediction First
+  </div>
+  <!-- Run Prediction Button -->
+  <button class="run-btn" id="run-btn" onclick="runPrediction()" style="margin-bottom:12px">
+    <span id="run-btn-text">▶ Run Prediction</span>
+  </button>
+
+  <div class="metrics">
+    <div class="mc mc-gold"><div class="mc-label">Cl — Lift</div><div class="mc-val cgo" id="p-cl">—</div><div class="mc-sub">downforce coeff</div></div>
+    <div class="mc mc-b"><div class="mc-label">Cd — Drag</div><div class="mc-val cb" id="p-cd">—</div><div class="mc-sub" id="cd-unc-sub">Cd R²=0.9247</div></div>
+    <div class="mc mc-g"><div class="mc-label">Cm — Moment</div><div class="mc-val cg" id="p-cm">—</div><div class="mc-sub">c/4 pitching</div></div>
+    <div class="mc mc-r"><div class="mc-label">L/D Ratio</div><div class="mc-val" id="p-ld">—</div><div class="mc-sub">efficiency</div></div>
+    <div class="mc" style="border-left:4px solid var(--cyan);box-shadow:0 0 15px rgba(6,182,212,.15)"><div class="mc-label">Stall Margin</div><div class="mc-val" style="color:var(--cyan)" id="p-stall-margin">—</div><div class="mc-sub">deg to stall</div></div>
+    <div class="mc" id="mc-confidence"><div class="mc-label">Confidence</div><div class="mc-val" id="p-confidence-tier" style="font-size:16px">—</div><div class="mc-sub" id="p-confidence-val">—</div></div>
+  </div>
+
+  <!-- API Warnings -->
+  <div id="api-warnings" style="display:none;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);
+    border-radius:8px;padding:10px 12px;margin-bottom:10px">
+    <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.08em;margin-bottom:4px">⚠ API NOTES</div>
+    <div id="api-warnings-text" style="font-size:11px;color:var(--mt);line-height:1.7;font-family:var(--fm)"></div>
+  </div>
+
+  <!-- Derived industry metrics -->
+  <div class="sec-title" style="margin-top:8px">Derived Performance</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:10px">
+    <div class="mc" style="padding:6px 8px;text-align:center">
+      <div class="mc-label" style="font-size:11px">Downforce<br>N/m²</div>
+      <div class="mc-val" style="font-size:13px;color:var(--gold)" id="p-df">—</div>
+    </div>
+    <div class="mc" style="padding:6px 8px;text-align:center">
+      <div class="mc-label" style="font-size:11px">Drag<br>N/m²</div>
+      <div class="mc-val" style="font-size:13px;color:var(--blue)" id="p-dr">—</div>
+    </div>
+    <div class="mc" style="padding:6px 8px;text-align:center">
+      <div class="mc-label" style="font-size:11px">Total Force<br>N (wing)</div>
+      <div class="mc-val" style="font-size:13px;color:var(--cyan)" id="p-tf">—</div>
+    </div>
+    <div class="mc" style="padding:6px 8px;text-align:center">
+      <div class="mc-label" style="font-size:11px">Cl_max<br>proxy</div>
+      <div class="mc-val" style="font-size:13px;color:var(--green)" id="p-clmax">—</div>
+    </div>
+    <div class="mc" style="padding:6px 8px;text-align:center">
+      <div class="mc-label" style="font-size:11px">Stall AoA<br>proxy</div>
+      <div class="mc-val" style="font-size:13px;color:var(--gold)" id="p-stall">—</div>
+    </div>
+    <div class="mc" style="padding:6px 8px;text-align:center">
+      <div class="mc-label" style="font-size:11px">Aero Eff<br>Cl^1.5/Cd</div>
+      <div class="mc-val" style="font-size:13px;color:var(--green)" id="p-aei">—</div>
+    </div>
+  </div>
+
+  <!-- Uncertainty notice -->
+  <div style="background:rgba(0,136,255,.04);border:1px solid rgba(0,136,255,.2);
+    border-radius:4px;padding:7px 9px;margin-bottom:10px" id="model-notice">
+    <div style="font-size:11px;color:rgba(0,136,255,.8);letter-spacing:.04em;line-height:1.6;font-family:var(--fm)">
+      ▶ Enter your Cloudflare tunnel URL + API key in the Connection panel above, then click Run Prediction to query the live MultiFidelityAeroAI surrogate. Results from aero_ai_v2.0_multifidelity · Cd R²=0.9247 · Gate 3 ✅
+    </div>
+  </div>
+
+  <!-- Action buttons -->
+  <button class="copy-btn" onclick="exportCSV()" style="margin-top:6px">↓ Export Last Prediction CSV</button>
+  <button class="copy-btn" onclick="exportPolar()">↓ Export Polar CSV</button>
+  <button class="copy-btn" onclick="copyCFD()"><span>▶ Copy CFD Command</span></button>
+  <button class="copy-btn" onclick="copyPython()">Copy Python · geometry_gen.py</button>
+  <button class="screenshot-btn" onclick="exportScreenshot()">📸 Export Viewport PNG</button>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn on" onclick="switchTab('history',this)">Session Log</button>
+    <button class="tab-btn" onclick="switchTab('surrogate',this)">Surrogate</button>
+    <button class="tab-btn" onclick="switchTab('roadmap',this)">Roadmap</button>
+  </div>
+
+  <div id="tab-history" class="tab-panel on">
+    <div class="sec-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Live Session Log</span>
+      <span id="session-count" style="font-size:10px;font-weight:600;color:var(--mt);background:var(--s3);
+        padding:2px 8px;border-radius:10px;letter-spacing:.06em">0 runs</span>
+    </div>
+    <div id="history-list">
+      <div style="text-align:center;color:var(--mt2);font-size:12px;padding:24px 0;font-family:var(--fm)">
+        No predictions yet.<br>Connect API and run a prediction.
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-surrogate" class="tab-panel">
+    <div class="sec-title">MultiFidelityAeroAI · MVP1</div>
+    <div class="metrics" style="grid-template-columns:1fr 1fr">
+      <div class="mc mc-g"><div class="mc-label">Cl R²</div><div class="mc-val cg">0.9873</div><div class="mc-sub">29,967 rows</div></div>
+      <div class="mc mc-b"><div class="mc-label">Cd R²</div><div class="mc-val cb">0.9247</div><div class="mc-sub">Gate 3 ✅</div></div>
+      <div class="mc mc-gold"><div class="mc-label">Cm R²</div><div class="mc-val cgo">0.9853</div><div class="mc-sub">29,967 rows</div></div>
+      <div class="mc mc-g"><div class="mc-label">API Status</div><div class="mc-val cg" id="stat-onnx" style="font-size:11px">⚪ Not connected</div></div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--mt);line-height:2.0;font-family:var(--fm)">
+      <span style="color:var(--green)">Model</span> · aero_ai_v2.0_multifidelity · MultiFidelityAeroAI<br>
+      <span style="color:var(--blue)">Inputs</span> · m, p, t (NACA digits), aoa, re<br>
+      <span style="color:var(--gold)">Outputs</span> · cl, cd, cm, stall_margin, ld_ratio, aero_balance<br>
+      <span style="color:var(--cyan)">Uncertainty</span> · cl_std, cd_std, confidence, confidence_tier<br>
+      <span style="color:var(--mt)">Sources: XFOIL (26,728) + CFD/k-ω SST (3,239) · CFD weight 10×</span><br>
+      <span style="color:var(--mt)">Serving: FastAPI + Cloudflare tunnel + ONNX Runtime 1.24.4</span>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:rgba(16,185,129,.8);line-height:1.6;
+      background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.15);border-radius:4px;padding:8px 10px">
+      ✅ Cd R²=0.9247 — Gate 3 passed. All 5 ONNX validation tests passed (Session D). Gate 2 7/8 — Cd monotonicity above stall accepted as MVP1 known limitation.
+    </div>
+  </div>
+
+  <div id="tab-roadmap" class="tab-panel">
+    <div class="sec-title">MVP1 Session Roadmap</div>
+    <div style="font-size:12px;line-height:2.2;color:var(--mt);font-family:var(--fm)">
+      <div style="color:var(--green)">✓ Session A — Environment + CFD pipeline v3</div>
+      <div style="color:var(--green)">✓ Session B — Surrogate NN · Cl/Cm R²=0.987</div>
+      <div style="color:var(--green)">✓ Session C — Cd model retrain · R²=0.9247 Gate 3 ✅</div>
+      <div style="color:var(--green)">✓ Session D — FastAPI + ONNX export · CF tunnel live</div>
+      <div style="color:var(--gold)">◉ Session E — Dashboard build (current)</div>
+      <div>○ Session F — CORS lock · Vercel deploy · end-to-end test</div>
+      <div>○ Session G — Front wing ground effect mode</div>
+      <div>○ Session H — Full car aero (Cl=1.0+)</div>
+      <div>○ Session I — Generative design platform</div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--mt2);font-family:var(--fm);
+      background:rgba(0,0,0,.2);border-radius:8px;padding:10px">
+      Gate 1 ✅ Cd R²≥0.92 → 0.9247<br>
+      Gate 2 ⚠ 7/8 physics tests (Cd monotonicity above stall: known MVP1 limit)<br>
+      Gate 3 ✅ ONNX export + 5/5 validation tests<br>
+      Git: commit efadbdd · repo aeroai-backend
+    </div>
+  </div>
+</div>
+
+<!-- 3D Viewport -->
+<div class="viewport">
+  <canvas id="three-canvas"></canvas>
+  <div class="loading" id="loading"><div class="load-ring"></div><div class="load-text">Initialising renderer</div></div>
+
+  <!-- Keyboard hints -->
+  <div class="kb-hints" id="kb-hints">
+    <div class="kb-hint"><kbd>1-4</kbd> Views</div>
+    <div class="kb-hint"><kbd>R</kbd> Reset</div>
+    <div class="kb-hint"><kbd>Space</kbd> AutoRotate</div>
+    <div class="kb-hint"><kbd>Shift</kbd>+Drag Wing</div>
+    <div class="kb-hint"><kbd>E</kbd> Endplates</div>
+    <div class="kb-hint"><kbd>M</kbd> Multi-element</div>
+  </div>
+
+  <!-- HUD TL -->
+  <div class="hud hud-tl">
+    <div class="hud-box">
+      <div class="hud-title">Wing Profile</div>
+      <div class="hud-stat"><span class="hud-key">NACA</span><span class="hud-num cg" id="h-naca">9422</span></div>
+      <div class="hud-stat"><span class="hud-key">Camber</span><span class="hud-num" id="h-camber">9%</span></div>
+      <div class="hud-stat"><span class="hud-key">Position</span><span class="hud-num" id="h-pos">40%c</span></div>
+      <div class="hud-stat"><span class="hud-key">Thickness</span><span class="hud-num" id="h-thick">22%</span></div>
+      <div class="hud-stat"><span class="hud-key">AoA</span><span class="hud-num" id="h-aoa">8.1°</span></div>
+    </div>
+  </div>
+
+  <!-- HUD TR -->
+  <div class="hud hud-tr">
+    <div class="hud-box">
+      <div class="hud-title">Aerodynamics</div>
+      <div class="hud-stat"><span class="hud-key">Cl</span><span class="hud-num cgo" id="h-cl">—</span></div>
+      <div class="hud-stat"><span class="hud-key">Cd</span><span class="hud-num cb" id="h-cd">—</span></div>
+      <div class="hud-stat"><span class="hud-key">Cm</span><span class="hud-num cg" id="h-cm">—</span></div>
+      <div class="hud-stat"><span class="hud-key">L/D</span><span class="hud-num" id="h-ld">—</span></div>
+      <div class="hud-stat"><span class="hud-key">Re</span><span class="hud-num" id="h-re">—</span></div>
+    </div>
+  </div>
+
+  <!-- HUD BL -->
+  <div class="hud hud-bl">
+    <div class="flow-toggle">
+      <button class="ft-btn active" id="btn-flow" onclick="toggleFlow()">Airflow</button>
+      <button class="ft-btn active" id="btn-pressure" onclick="togglePressure()">Pressure</button>
+      <button class="ft-btn" id="btn-wire" onclick="toggleWire()">Wireframe</button>
+      <button class="ft-btn" id="btn-endplate" onclick="toggleEndplates()">Endplates</button>
+      <button class="ft-btn" id="btn-multi" onclick="toggleMultiElement()">Multi-Elem</button>
+    </div>
+    <div class="pressure-legend" id="pressure-legend">
+      <div class="pressure-label"><span>Low P</span><span>High P</span></div><div class="pressure-bar"></div>
+    </div>
+  </div>
+
+  <!-- HUD BR -->
+  <div class="hud hud-br">
+    <div class="view-controls">
+      <button class="vc-btn" title="Front view [1]" onclick="setView('front')">F</button>
+      <button class="vc-btn" title="Side view [2]" onclick="setView('side')">S</button>
+      <button class="vc-btn" title="Top view [3]" onclick="setView('top')">T</button>
+      <button class="vc-btn" title="Isometric [4]" onclick="setView('iso')">3D</button>
+      <button class="vc-btn" id="btn-autorot" title="Auto-rotate [Space]" onclick="toggleAutoRotate()">↻</button>
+      <button class="vc-btn" title="Reset [R]" onclick="setView('iso')">↺</button>
+    </div>
+  </div>
+
+  <div class="coord-display" id="coord-display"></div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// State
+// ══════════════════════════════════════════════════════════════
+const STATE = {
+  naca:'4412', aoa:8.0, vel:60, chord:0.3, span:1.0, rh:0.05, re:1e6,
+  mode:'rear', showFlow:true, showPressure:true, wireframe:false,
+  showEndplates:false, multiElement:false,
+  wingRotY:0, wingRotX:0
+};
+
+const CFD_DATA = [
+  {naca:'9422',aoa:8.1,vel:80,Cl:0.5395,Cd:0.0875,LD:6.16,best:false},
+  {naca:'9422',aoa:8.1,vel:83,Cl:0.5413,Cd:0.0892,LD:6.07,best:false},
+  {naca:'9422',aoa:8.1,vel:85,Cl:0.5415,Cd:0.0892,LD:6.07,best:false},
+  {naca:'9422',aoa:8.1,vel:78,Cl:0.5185,Cd:0.0889,LD:5.83,best:false},
+  {naca:'9422',aoa:7.5,vel:80,Cl:0.4999,Cd:0.0881,LD:5.67,best:false},
+  {naca:'9422',aoa:9.0,vel:78,Cl:0.4590,Cd:0.1004,LD:4.57,best:false},
+  {naca:'9411',aoa:7.6,vel:52,Cl:0.5212,Cd:0.0871,LD:5.98,best:true},
+  {naca:'9411',aoa:7.8,vel:55,Cl:0.5070,Cd:0.0685,LD:7.41,best:false},
+  {naca:'9411',aoa:7.1,vel:54,Cl:0.4725,Cd:0.0609,LD:7.75,best:false},
+  {naca:'9411',aoa:8.9,vel:45,Cl:0.4327,Cd:0.0859,LD:5.04,best:false},
+  {naca:'9413',aoa:6.8,vel:47,Cl:0.5041,Cd:0.0597,LD:8.44,best:false},
+  {naca:'9413',aoa:8.0,vel:65,Cl:0.5206,Cd:0.0690,LD:7.55,best:false},
+  {naca:'9413',aoa:7.0,vel:40,Cl:0.4560,Cd:0.0582,LD:7.83,best:false},
+  {naca:'9413',aoa:8.6,vel:42,Cl:0.5039,Cd:0.0792,LD:6.37,best:false},
+  {naca:'9311',aoa:7.5,vel:55,Cl:0.5068,Cd:0.0670,LD:7.56,best:false},
+  {naca:'9313',aoa:7.8,vel:80,Cl:0.5155,Cd:0.0672,LD:7.67,best:false},
+  {naca:'9313',aoa:8.0,vel:65,Cl:0.5206,Cd:0.0690,LD:7.55,best:false},
+  {naca:'9312',aoa:7.4,vel:55,Cl:0.4818,Cd:0.0614,LD:7.85,best:false},
+  {naca:'8313',aoa:7.8,vel:78,Cl:0.4975,Cd:0.0638,LD:7.80,best:false},
+  {naca:'8314',aoa:7.6,vel:52,Cl:0.5149,Cd:0.0820,LD:6.28,best:false},
+  {naca:'9320',aoa:6.0,vel:50,Cl:0.4880,Cd:0.0518,LD:9.42,best:false},
+  {naca:'9320',aoa:7.5,vel:55,Cl:0.4635,Cd:0.0778,LD:5.96,best:false},
+  {naca:'9420',aoa:8.1,vel:78,Cl:0.4951,Cd:0.1004,LD:4.57,best:false},
+  {naca:'9420',aoa:7.6,vel:48,Cl:0.4271,Cd:0.0721,LD:5.92,best:false},
+  {naca:'9421',aoa:7.7,vel:51,Cl:0.4381,Cd:0.0724,LD:6.05,best:false},
+  {naca:'9421',aoa:7.8,vel:54,Cl:0.4103,Cd:0.0691,LD:5.94,best:false},
+  {naca:'9424',aoa:7.3,vel:75,Cl:0.3873,Cd:0.0724,LD:5.35,best:false},
+  {naca:'9424',aoa:8.1,vel:80,Cl:0.4338,Cd:0.0946,LD:4.59,best:false},
+  {naca:'9416',aoa:4.0,vel:52,Cl:0.4399,Cd:0.0710,LD:6.20,best:false},
+  {naca:'9412',aoa:9.1,vel:45,Cl:0.4109,Cd:0.0825,LD:4.98,best:false},
+  {naca:'9522',aoa:8.1,vel:80,Cl:0.4553,Cd:0.0729,LD:6.25,best:false},
+  {naca:'9508',aoa:10.3,vel:54,Cl:0.3745,Cd:0.1197,LD:3.13,best:false},
+  {naca:'9409',aoa:10.5,vel:56,Cl:0.3975,Cd:0.1235,LD:3.22,best:false},
+  {naca:'9408',aoa:10.2,vel:53,Cl:0.3848,Cd:0.1161,LD:3.32,best:false},
+  {naca:'4412',aoa:8.0,vel:50,Cl:0.4087,Cd:0.0668,LD:6.12,best:false},
+];
+
+const NU=1.5e-5, RHO=1.225;
+
+// ══════════════════════════════════════════════════════════════
+// Helpers
+// ══════════════════════════════════════════════════════════════
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  btn.classList.add('on');
+}
+function setMode(m){
+  STATE.mode=m;
+  document.getElementById('mode-rear').classList.toggle('active',m==='rear');
+  document.getElementById('mode-front').classList.toggle('active',m==='front');
+  document.getElementById('rh-ctrl').style.display=m==='front'?'block':'none';
+  rebuildWing();
+}
+
+// ══════════════════════════════════════════════════════════════
+// NACA geometry
+// ══════════════════════════════════════════════════════════════
+function nacaProfile(code, n=180) {
+  const m=parseInt(code[0])/100, p=parseInt(code[1])/10, t=parseInt(code.slice(2))/100;
+  const upper=[], lower=[];
+  for(let i=0;i<=n;i++){
+    const b=i/n*Math.PI, x=(1-Math.cos(b))/2;
+    const xc=Math.max(x,1e-10);
+    const yt=(t/0.2)*(0.2969*Math.sqrt(xc)-0.126*xc-0.3516*xc*xc+0.2843*xc*xc*xc-0.1015*xc*xc*xc*xc);
+    const yc = x<=p ? (m/p/p)*(2*p*x-x*x) : (m/(1-p)/(1-p))*((1-2*p)+2*p*x-x*x);
+    const dyc= x<=p ? (2*m/p/p)*(p-x)     : (2*m/(1-p)/(1-p))*(p-x);
+    const th=Math.atan(dyc);
+    upper.push({x:x-yt*Math.sin(th), y:yc+yt*Math.cos(th)});
+    lower.push({x:x+yt*Math.sin(th), y:yc-yt*Math.cos(th)});
+  }
+  return {upper, lower, m, p, t};
+}
+
+// ══════════════════════════════════════════════════════════════
+// AERO.AI MVP1 — FastAPI REST Engine
+// Model: aero_ai_v2.0_multifidelity · MultiFidelityAeroAI
+// Endpoint: POST {CF_URL}/v1/predict · Header: X-API-Key
+// Cd R²=0.9247 · Gate 3 ✅ · Session D confirmed working
+// ══════════════════════════════════════════════════════════════
+
+// Session history — every /v1/predict call appended here
+const SESSION_HISTORY = [];
+let LAST_API_RESPONSE = null;
+let API_CONNECTED = false;
+
+// ── Connection test ────────────────────────────────────────────
+async function testConnection() {
+  const cfUrl = document.getElementById('cf-url').value.trim().replace(/\/$/, '');
+  const apiKey = document.getElementById('api-key').value.trim();
+  const statusEl = document.getElementById('conn-status');
+  const chip = document.getElementById('model-status-chip');
+  const statOnnx = document.getElementById('stat-onnx');
+
+  if (!cfUrl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✗ Enter CF Tunnel URL'; return; }
+  if (!apiKey) { statusEl.style.color = 'var(--red)'; statusEl.textContent = '✗ Enter API key'; return; }
+
+  statusEl.style.color = 'var(--mt)';
+  statusEl.textContent = '⏳ Testing…';
+  chip.textContent = '⏳ Connecting…';
+  chip.style.color = 'var(--gold)';
+
+  try {
+    const res = await fetch(`${cfUrl}/health`, {
+      headers: { 'X-API-Key': apiKey }
+    });
+    if (res.ok) {
+      API_CONNECTED = true;
+      statusEl.style.color = 'var(--green)';
+      statusEl.textContent = '✅ Connected — backend healthy';
+      chip.textContent = '✅ API Connected · MVP1';
+      chip.style.color = 'var(--green)';
+      if (statOnnx) { statOnnx.textContent = '✅ API live'; statOnnx.style.color = 'var(--green)'; }
+      toast('✅ Backend connected');
+    } else {
+      throw new Error(`HTTP ${res.status}`);
+    }
+  } catch (err) {
+    API_CONNECTED = false;
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = `✗ ${err.message}`;
+    chip.textContent = '✗ Connection failed';
+    chip.style.color = 'var(--red)';
+    toast('✗ Connection failed — check URL and key');
+  }
+}
+
+// ── Main prediction call ───────────────────────────────────────
+async function callAPI(naca, aoa_deg, Re) {
+  const cfUrl = document.getElementById('cf-url').value.trim().replace(/\/$/, '');
+  const apiKey = document.getElementById('api-key').value.trim();
+  if (!cfUrl || !apiKey) throw new Error('CF URL and API key required');
+
+  const m = parseInt(naca[0]);
+  const p = parseInt(naca[1]);
+  const t = parseInt(naca.slice(2));
+
+  const body = { m, p, t, aoa: aoa_deg, re: Math.round(Re) };
+
+  const res = await fetch(`${cfUrl}/v1/predict`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+    body: JSON.stringify(body)
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => res.statusText);
+    throw new Error(`API ${res.status}: ${errText}`);
+  }
+
+  return await res.json();
+}
+
+// ── Run Prediction (main action) ───────────────────────────────
+async function runPrediction() {
+  const btn = document.getElementById('run-btn');
+  const btnText = document.getElementById('run-btn-text');
+  const badge = document.getElementById('ai-source-badge');
+  const chip = document.getElementById('model-status-chip');
+  const infBadge = document.getElementById('inference-badge');
+
+  btnText.textContent = '⏳ Running…';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  try {
+    const data = await callAPI(STATE.naca, STATE.aoa, STATE.re);
+    LAST_API_RESPONSE = { ...data, naca: STATE.naca, aoa: STATE.aoa, vel: STATE.vel, re: STATE.re };
+    API_CONNECTED = true;
+
+    // ── Primary metrics ────────────────────────────────────────
+    document.getElementById('p-cl').textContent = data.cl?.toFixed(4) ?? '—';
+    document.getElementById('p-cd').textContent = data.cd?.toFixed(5) ?? '—';
+    document.getElementById('p-cm').textContent = data.cm?.toFixed(4) ?? '—';
+    document.getElementById('p-ld').textContent = (data.ld_ratio ?? data.cl/data.cd)?.toFixed(3) ?? '—';
+
+    // ── Stall margin ──────────────────────────────────────────
+    document.getElementById('p-stall-margin').textContent =
+      data.stall_margin != null ? data.stall_margin.toFixed(2) + '°' : '—';
+
+    // ── Confidence tier ───────────────────────────────────────
+    const tier = data.confidence_tier ?? 'unknown';
+    const tierColor = { green: 'var(--green)', amber: 'var(--gold)', red: 'var(--red)' }[tier] || 'var(--mt)';
+    const tierLabel = { green: '🟢 GREEN', amber: '🟡 AMBER', red: '🔴 RED' }[tier] || tier.toUpperCase();
+    document.getElementById('p-confidence-tier').textContent = tierLabel;
+    document.getElementById('p-confidence-tier').style.color = tierColor;
+    document.getElementById('p-confidence-val').textContent =
+      data.confidence != null ? `score: ${data.confidence.toFixed(3)}` : '—';
+    const mcConf = document.getElementById('mc-confidence');
+    if (mcConf) { mcConf.style.borderLeft = `4px solid ${tierColor}`; mcConf.style.boxShadow = `0 0 15px ${tierColor}33`; }
+
+    // ── HUD ──────────────────────────────────────────────────
+    document.getElementById('h-cl').textContent = data.cl?.toFixed(4) ?? '—';
+    document.getElementById('h-cd').textContent = data.cd?.toFixed(5) ?? '—';
+    document.getElementById('h-cm').textContent = data.cm?.toFixed(4) ?? '—';
+    document.getElementById('h-ld').textContent = (data.ld_ratio ?? data.cl/data.cd)?.toFixed(3) ?? '—';
+    document.getElementById('h-re').textContent = (STATE.re/1e6).toFixed(2) + 'M';
+
+    // ── Derived performance ───────────────────────────────────
+    const q = 0.5 * 1.225 * STATE.vel * STATE.vel;
+    document.getElementById('p-df').textContent = (q * data.cl).toFixed(1);
+    document.getElementById('p-dr').textContent = (q * data.cd).toFixed(2);
+    document.getElementById('p-tf').textContent = (q * data.cl * STATE.chord * STATE.span).toFixed(1) + 'N';
+
+    // Proxy stall AoA + Cl_max (geometry-based, no API needed)
+    const t_frac = parseInt(STATE.naca.slice(2)) / 100;
+    document.getElementById('p-stall').textContent = (10 + t_frac*35).toFixed(1) + '°';
+    const clmax_approx = data.cl != null ? Math.min(data.cl * 1.15, 2.2) : '—';
+    document.getElementById('p-clmax').textContent = typeof clmax_approx === 'number' ? clmax_approx.toFixed(3) : '—';
+    const aei = data.cl && data.cd ? Math.pow(Math.abs(data.cl), 1.5) / data.cd : 0;
+    document.getElementById('p-aei').textContent = aei.toFixed(2);
+
+    // ── Inference badge ───────────────────────────────────────
+    if (data.inference_ms != null) {
+      infBadge.textContent = `⚡ ${data.inference_ms.toFixed(0)}ms`;
+      infBadge.style.display = '';
+    }
+
+    // ── Warnings ─────────────────────────────────────────────
+    const warnEl = document.getElementById('api-warnings');
+    const warnText = document.getElementById('api-warnings-text');
+    if (data.warnings && data.warnings.length > 0) {
+      warnEl.style.display = '';
+      warnText.textContent = data.warnings.join(' · ');
+    } else { warnEl.style.display = 'none'; }
+
+    // ── Status badges ─────────────────────────────────────────
+    chip.textContent = `✅ MVP1 · ${data.model_version ?? 'aero_ai_v2.0_multifidelity'}`;
+    chip.style.color = 'var(--green)';
+    badge.textContent = `✅ LIVE API · ${data.model_version ?? 'aero_ai_v2.0_multifidelity'} · ${data.user_name ?? ''}`;
+    badge.style.color = 'var(--green)';
+    badge.style.borderColor = 'rgba(16,185,129,.25)';
+    badge.style.background = 'rgba(16,185,129,.06)';
+
+    // ── Wing profile HUD ─────────────────────────────────────
+    const n = STATE.naca;
+    document.getElementById('h-naca').textContent = n;
+    document.getElementById('h-camber').textContent = parseInt(n[0]) + '%';
+    document.getElementById('h-pos').textContent = (parseInt(n[1]) * 10) + '%c';
+    document.getElementById('h-thick').textContent = parseInt(n.slice(2)) + '%';
+    document.getElementById('h-aoa').textContent = STATE.aoa.toFixed(1) + '°';
+
+    // ── Append to session history ─────────────────────────────
+    SESSION_HISTORY.unshift(LAST_API_RESPONSE);
+    updateSessionHistory();
+
+    toast(`✅ NACA ${STATE.naca} · Cl=${data.cl?.toFixed(3)} · Cd=${data.cd?.toFixed(4)}`);
+
+  } catch (err) {
+    chip.textContent = '✗ API Error';
+    chip.style.color = 'var(--red)';
+    badge.textContent = `✗ ${err.message}`;
+    badge.style.color = 'var(--red)';
+    badge.style.borderColor = 'rgba(239,68,68,.25)';
+    badge.style.background = 'rgba(239,68,68,.06)';
+    toast(`✗ ${err.message}`);
+    console.error('API error:', err);
+  } finally {
+    btnText.textContent = '▶ Run Prediction';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+}
+
+// ── updateMetrics — just updates wing profile HUD, no API call ─
+function updateMetrics() {
+  const n = STATE.naca;
+  document.getElementById('h-naca').textContent = n;
+  document.getElementById('h-camber').textContent = parseInt(n[0]) + '%';
+  document.getElementById('h-pos').textContent = (parseInt(n[1]) * 10) + '%c';
+  document.getElementById('h-thick').textContent = parseInt(n.slice(2)) + '%';
+  document.getElementById('h-aoa').textContent = STATE.aoa.toFixed(1) + '°';
+}
+
+// ── Session history renderer ───────────────────────────────────
+function updateSessionHistory() {
+  const list = document.getElementById('history-list');
+  const countEl = document.getElementById('session-count');
+  if (countEl) countEl.textContent = `${SESSION_HISTORY.length} run${SESSION_HISTORY.length !== 1 ? 's' : ''}`;
+  if (!SESSION_HISTORY.length) {
+    list.innerHTML = '<div style="text-align:center;color:var(--mt2);font-size:12px;padding:24px 0;font-family:var(--fm)">No predictions yet.<br>Connect API and run a prediction.</div>';
+    return;
+  }
+  const best = SESSION_HISTORY.reduce((a, b) => (a.cl||0) > (b.cl||0) ? a : b, SESSION_HISTORY[0]);
+  list.innerHTML = SESSION_HISTORY.map((d, i) => {
+    const isBest = d === best;
+    const ld = d.ld_ratio ?? (d.cl && d.cd ? d.cl/d.cd : null);
+    const tier = d.confidence_tier ?? '';
+    const tierDot = { green: '🟢', amber: '🟡', red: '🔴' }[tier] || '';
+    return `<div class="history-item ${isBest ? 'best' : ''}" onclick="loadHistoryConfig(${i})" title="Click to reload">
+      <div>
+        <div class="hi-naca ${isBest ? 'cgo' : ''}" style="display:flex;align-items:center;gap:6px">
+          NACA ${d.naca ?? '—'} ${isBest ? '★' : ''} <span style="font-size:10px;color:var(--mt)">${tierDot}</span>
+        </div>
+        <div class="hi-stats">AoA ${d.aoa}° · Re ${(d.re/1e6).toFixed(2)}M · L/D ${ld?.toFixed(2) ?? '—'}</div>
+        <div class="hi-stats" style="color:var(--mt2)">Cd ${d.cd?.toFixed(5) ?? '—'} · Stall ±${d.stall_margin?.toFixed(1) ?? '—'}°</div>
+      </div>
+      <div class="hi-cl ${(d.cl??0) >= 0.5 ? 'cgo' : (d.cl??0) >= 0.4 ? 'cg' : 'cb'}">${d.cl?.toFixed(3) ?? '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function loadHistoryConfig(i) {
+  const d = SESSION_HISTORY[i];
+  if (!d) return;
+  if (d.naca) { STATE.naca = d.naca; document.getElementById('naca-input').value = d.naca; document.getElementById('naca-show').textContent = d.naca; document.getElementById('naca-search').value = d.naca; }
+  if (d.aoa != null) { STATE.aoa = d.aoa; document.getElementById('sl-aoa').value = d.aoa; document.getElementById('v-aoa').textContent = d.aoa.toFixed(1) + '°'; }
+  if (d.vel != null) { STATE.vel = d.vel; document.getElementById('sl-vel').value = d.vel; document.getElementById('v-vel').textContent = d.vel + ' m/s'; }
+  if (d.re != null) { STATE.re = d.re; document.getElementById('sl-re').value = d.re; document.getElementById('v-re').textContent = (d.re/1e6).toFixed(2) + 'M'; }
+  rebuildWing();
+  toast(`Loaded NACA ${d.naca} — click Run to re-predict`);
+}
+
+// ── Polar export — uses analytical for polar sweep ─────────────
+function computePolar(naca, Re, aoaMin=-2, aoaMax=14, step=1) {
+  // Lightweight analytical approximation for polar CSV only
+  const polar = [];
+  for (let a = aoaMin; a <= aoaMax + 0.001; a += step) {
+    const aoa = parseFloat(a.toFixed(1));
+    const m = parseInt(naca[0])/100, p = parseInt(naca[1])/10, t_frac = parseInt(naca.slice(2))/100;
+    const alpha = aoa * Math.PI / 180;
+    let alpha0 = 0;
+    if (m > 0 && p > 0) { alpha0 = -m*(0.5-p)*(2/(p*(1-p))); alpha0 = Math.max(-0.25, Math.min(0, alpha0)); }
+    let Cl = Math.max(-1.4, Math.min(2.2, 2*Math.PI*(alpha-alpha0)));
+    const Cf = 0.074 / Math.pow(Re, 0.2);
+    let Cd = Math.max(0.004, 2*Cf + (2*t_frac + 60*Math.pow(t_frac,4))*Cf + Cl*Cl*0.006);
+    let Cm = m > 0 && p > 0 ? Math.max(-0.35, Math.min(0.05, -(Math.PI/4)*m*(p*2-1)/(p*p))) : 0;
+    polar.push({ aoa, Cl: +Cl.toFixed(4), Cd: +Cd.toFixed(5), Cm: +Cm.toFixed(4), LD: +(Cl/Cd).toFixed(3) });
+  }
+  return polar;
+}
+
+async function computePolarOnnx(naca, Re, aoaMin=-2, aoaMax=14, step=1) {
+  return computePolar(naca, Re, aoaMin, aoaMax, step);
+}
+
+function predictPoint(naca, aoa_deg, Re) {
+  return LAST_API_RESPONSE ? LAST_API_RESPONSE : { Cl: 0, Cd: 0, Cm: 0, LD: 0 };
+}
+
+// ══════════════════════════════════════════════════════════════
+// Three.js Setup
+// ══════════════════════════════════════════════════════════════
+const canvas=document.getElementById('three-canvas');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true,powerPreference:"high-performance"});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setClearColor(0x030712,1);
+renderer.shadowMap.enabled=true;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.4;
+
+const scene=new THREE.Scene();
+// Subtle fog for depth
+scene.fog=new THREE.FogExp2(0x030712,0.8);
+
+const camera=new THREE.PerspectiveCamera(45,2,0.001,100);
+camera.position.set(0.3,0.25,0.7);
+
+// Lights
+const ambLight=new THREE.AmbientLight(0x1e293b,3);
+scene.add(ambLight);
+const dlight=new THREE.DirectionalLight(0xbad4ff,2.2);
+dlight.position.set(1,2,1);scene.add(dlight);
+const dlight2=new THREE.DirectionalLight(0x00e88a,0.4);
+dlight2.position.set(-1,-1,0.5);scene.add(dlight2);
+const rimLight=new THREE.DirectionalLight(0x0088ff,0.3);
+rimLight.position.set(0,-1,-1);scene.add(rimLight);
+
+// Grid
+const grid=new THREE.GridHelper(4,40,0x1a2330,0x1a2330);
+grid.position.y=-0.05;scene.add(grid);
+
+// Axes gizmo
+const axesHelper=new THREE.AxesHelper(0.08);
+axesHelper.position.set(-0.35,-0.04,-0.35);
+scene.add(axesHelper);
+
+// ── OrbitControls ──
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.dampingFactor=0.08;
+controls.rotateSpeed=0.8;
+controls.panSpeed=0.5;
+controls.zoomSpeed=1.2;
+controls.target.set(0.15,0,0);
+controls.minDistance=0.15;
+controls.maxDistance=3.0;
+controls.maxPolarAngle=Math.PI*0.95;
+controls.update();
+
+// ── Animated Camera Transitions ──
+let camAnim=null;
+function animateCamera(targetPos,targetLookAt,duration=800){
+  const startPos=camera.position.clone();
+  const startTarget=controls.target.clone();
+  const endPos=new THREE.Vector3(...targetPos);
+  const endTarget=new THREE.Vector3(...targetLookAt);
+  const startTime=performance.now();
+  camAnim={startPos,startTarget,endPos,endTarget,startTime,duration};
+}
+function updateCameraAnim(){
+  if(!camAnim)return;
+  const elapsed=performance.now()-camAnim.startTime;
+  let t=Math.min(elapsed/camAnim.duration,1);
+  // Ease out cubic
+  t=1-Math.pow(1-t,3);
+  camera.position.lerpVectors(camAnim.startPos,camAnim.endPos,t);
+  controls.target.lerpVectors(camAnim.startTarget,camAnim.endTarget,t);
+  controls.update();
+  if(t>=1)camAnim=null;
+}
+
+function setView(v){
+  const target=[0.15,0,0];
+  if(v==='front') animateCamera([0.15,0,0.6],target);
+  else if(v==='side') animateCamera([0.65,0,0],target);
+  else if(v==='top') animateCamera([0.15,0.7,0.01],target);
+  else animateCamera([0.4,0.25,0.55],target);
+}
+
+function toggleAutoRotate(){
+  controls.autoRotate=!controls.autoRotate;
+  controls.autoRotateSpeed=1.5;
+  document.getElementById('btn-autorot').classList.toggle('active',controls.autoRotate);
+  toast(controls.autoRotate?'Auto-rotate ON':'Auto-rotate OFF');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Wing mesh builder
+// ══════════════════════════════════════════════════════════════
+let wingGroup=null, flowGroup=null;
+
+function buildWingGeometry(naca, aoa, chord, span, invert=true) {
+  const {upper,lower}=nacaProfile(naca,120);
+  const aRad=-aoa*Math.PI/180*(invert?1:-1);
+  const cosA=Math.cos(aRad), sinA=Math.sin(aRad);
+  function rot(x,y){return{x:x*cosA-y*sinA, y:x*sinA+y*cosA}}
+  function inv(pt){return invert?{x:pt.x,y:-pt.y}:pt}
+  const verts=[];
+  const profile=[...upper, ...[...lower].reverse()];
+  for(let zi=0;zi<=1;zi++){
+    for(const pt of profile){
+      const rp=rot(pt.x*chord, inv(pt).y*chord);
+      verts.push(rp.x, rp.y, zi*span - span/2);
+    }
+  }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(verts),3));
+  const nPts=profile.length;
+  const idx=[];
+  for(let i=0;i<nPts-1;i++){
+    idx.push(i,i+1,nPts+i+1, i,nPts+i+1,nPts+i);
+  }
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+function buildPressureColors(geo, naca, aoa) {
+  const pos=geo.attributes.position;
+  const colors=new Float32Array(pos.count*3);
+  for(let i=0;i<pos.count;i++){
+    const y=pos.getY(i), x=pos.getX(i);
+    const norm=(y+0.05)/0.1;
+    const pressure=Math.max(0,Math.min(1,norm));
+    // Blue→Cyan→Green→Yellow→Red
+    let r,g,b;
+    if(pressure<0.25){r=0;g=pressure*4;b=1;}
+    else if(pressure<0.5){r=0;g=1;b=1-(pressure-0.25)*4;}
+    else if(pressure<0.75){r=(pressure-0.5)*4;g=1;b=0;}
+    else{r=1;g=1-(pressure-0.75)*4;b=0;}
+    colors[i*3]=r; colors[i*3+1]=g; colors[i*3+2]=b;
+  }
+  geo.setAttribute('color',new THREE.BufferAttribute(colors,3));
+}
+
+function createStreamlines(naca, aoa, chord) {
+  const group=new THREE.Group();
+  const nLines=28;
+  for(let li=0;li<nLines;li++){
+    const yStart=-0.14+li*0.01;
+    const zOffset=(li%5-2)*0.04;
+    const pts=[];
+    let x=-0.25, y=yStart;
+    for(let step=0;step<120;step++){
+      pts.push(new THREE.Vector3(x,y,zOffset));
+      const dx=chord*0.5-x, dy=-y;
+      const dist=Math.sqrt(dx*dx+dy*dy)+0.001;
+      const camber=parseInt(naca[0])/100;
+      const aRad=aoa*Math.PI/180;
+      const gamma=camber*chord*0.15*(1+aRad*2);
+      const vx=1 - gamma*dy/(2*Math.PI*dist*dist);
+      const vy=   gamma*dx/(2*Math.PI*dist*dist);
+      const speed=Math.sqrt(vx*vx+vy*vy);
+      x+=vx/speed*0.008; y+=vy/speed*0.008;
+      if(x>0.55||Math.abs(y)>0.25)break;
+    }
+    if(pts.length<3)continue;
+    const curve=new THREE.CatmullRomCurve3(pts);
+    const tubeGeo=new THREE.TubeGeometry(curve,pts.length,0.0008,4,false);
+    const speed=Math.abs(yStart)<0.03?1.0:0.6;
+    const col=new THREE.Color().setHSL(0.55-speed*0.15,1,0.5+speed*0.2);
+    const mat=new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.6});
+    group.add(new THREE.Mesh(tubeGeo,mat));
+  }
+  return group;
+}
+
+function createEndplates(chord, span) {
+  const group=new THREE.Group();
+  const plateH=chord*0.35, plateW=chord*1.1;
+  const geo=new THREE.PlaneGeometry(plateW,plateH);
+  const mat=new THREE.MeshPhongMaterial({color:0x0d1a2a,emissive:0x001122,
+    transparent:true,opacity:0.7,side:THREE.DoubleSide});
+  const edgeMat=new THREE.LineBasicMaterial({color:0x00e88a,transparent:true,opacity:0.4});
+  [-1,1].forEach(side=>{
+    const plate=new THREE.Mesh(geo,mat);
+    plate.rotation.y=Math.PI/2;
+    plate.position.set(chord*0.35,0,side*span/2);
+    group.add(plate);
+    const edges=new THREE.LineSegments(new THREE.EdgesGeometry(geo),edgeMat);
+    edges.rotation.y=Math.PI/2;
+    edges.position.set(chord*0.35,0,side*span/2);
+    group.add(edges);
+  });
+  return group;
+}
+
+function createMultiElement(naca, aoa, chord, span) {
+  const flapChord=chord*0.35;
+  const flapAoa=aoa+12;
+  const geo=buildWingGeometry(naca,flapAoa,flapChord,span*0.9,true);
+  buildPressureColors(geo,naca,flapAoa);
+  const mat=STATE.showPressure
+    ? new THREE.MeshPhysicalMaterial({vertexColors:true,roughness:0.3,metalness:0.4,clearcoat:0.8,clearcoatRoughness:0.1,side:THREE.DoubleSide})
+    : new THREE.MeshPhysicalMaterial({color:0x0f172a,emissive:0x000000,roughness:0.25,metalness:0.8,clearcoat:1.0,clearcoatRoughness:0.1,side:THREE.DoubleSide});
+  if(STATE.wireframe)mat.wireframe=true;
+  const mesh=new THREE.Mesh(geo,mat);
+  mesh.position.set(chord*0.85,-chord*0.08,0);
+  const edgeGeo=new THREE.EdgesGeometry(geo);
+  const edgeMat=new THREE.LineBasicMaterial({color:0x0088ff,transparent:true,opacity:0.3});
+  const edges=new THREE.LineSegments(edgeGeo,edgeMat);
+  edges.position.set(chord*0.85,-chord*0.08,0);
+  const group=new THREE.Group();
+  group.add(mesh);group.add(edges);
+  return group;
+}
+
+function rebuildWing() {
+  if(wingGroup){scene.remove(wingGroup);wingGroup=null}
+  if(flowGroup){scene.remove(flowGroup);flowGroup=null}
+  const naca=STATE.naca;
+  if(!/^\d{4}$/.test(naca))return;
+  const chord=STATE.chord, aoa=STATE.aoa, span=STATE.span;
+
+  const geo=buildWingGeometry(naca,aoa,chord,span,true);
+  buildPressureColors(geo,naca,aoa);
+  const mat=STATE.showPressure
+    ? new THREE.MeshPhysicalMaterial({vertexColors:true,roughness:0.3,metalness:0.4,clearcoat:0.8,clearcoatRoughness:0.1,side:THREE.DoubleSide})
+    : new THREE.MeshPhysicalMaterial({color:0x0f172a,emissive:0x000000,roughness:0.25,metalness:0.8,clearcoat:1.0,clearcoatRoughness:0.1,side:THREE.DoubleSide});
+  if(STATE.wireframe)mat.wireframe=true;
+  const mesh=new THREE.Mesh(geo,mat);
+  wingGroup=new THREE.Group();
+  wingGroup.add(mesh);
+
+  const edgeGeo=new THREE.EdgesGeometry(geo);
+  const edgeMat=new THREE.LineBasicMaterial({color:0x00e88a,transparent:true,opacity:0.4});
+  wingGroup.add(new THREE.LineSegments(edgeGeo,edgeMat));
+
+  // Endplates
+  if(STATE.showEndplates) wingGroup.add(createEndplates(chord,span));
+  // Multi-element flap
+  if(STATE.multiElement) wingGroup.add(createMultiElement(naca,aoa,chord,span));
+
+  // Apply manual wing rotation
+  wingGroup.rotation.y=STATE.wingRotY;
+  wingGroup.rotation.x=STATE.wingRotX;
+
+  scene.add(wingGroup);
+
+  // Streamlines
+  if(STATE.showFlow){
+    flowGroup=createStreamlines(naca,aoa,chord);
+    scene.add(flowGroup);
+  }
+
+  // Ground plane for front wing
+  if(STATE.mode==='front'){
+    const gGeo=new THREE.PlaneGeometry(1.5,span*2);
+    const gMat=new THREE.MeshPhysicalMaterial({color:0x050810,transparent:true,opacity:0.8,roughness:0.1,metalness:0.5});
+    const gMesh=new THREE.Mesh(gGeo,gMat);
+    gMesh.rotation.x=-Math.PI/2;
+    gMesh.position.y=-(STATE.rh);
+    wingGroup.add(gMesh);
+  }
+
+  // Pressure legend visibility
+  document.getElementById('pressure-legend').style.display=STATE.showPressure?'flex':'none';
+
+  document.getElementById('loading').classList.add('hidden');
+  updateMetrics();
+}
+
+// ══════════════════════════════════════════════════════════════
+// Shift+Drag Wing Rotation
+// ══════════════════════════════════════════════════════════════
+let shiftDragging=false, shiftLast={x:0,y:0};
+canvas.addEventListener('mousedown',e=>{
+  if(e.shiftKey){shiftDragging=true;shiftLast={x:e.clientX,y:e.clientY};controls.enabled=false;e.preventDefault();}
+});
+window.addEventListener('mouseup',()=>{if(shiftDragging){shiftDragging=false;controls.enabled=true;}});
+canvas.addEventListener('mousemove',e=>{
+  if(!shiftDragging)return;
+  const dx=(e.clientX-shiftLast.x)*0.005;
+  const dy=(e.clientY-shiftLast.y)*0.005;
+  STATE.wingRotY+=dx; STATE.wingRotX+=dy;
+  if(wingGroup){wingGroup.rotation.y=STATE.wingRotY;wingGroup.rotation.x=STATE.wingRotX;}
+  shiftLast={x:e.clientX,y:e.clientY};
+});
+
+// ══════════════════════════════════════════════════════════════
+// Mouse coord display
+// ══════════════════════════════════════════════════════════════
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+canvas.addEventListener('mousemove',e=>{
+  if(shiftDragging||!wingGroup)return;
+  const rect=canvas.getBoundingClientRect();
+  mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
+  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObject(wingGroup,true);
+  const cd=document.getElementById('coord-display');
+  if(hits.length>0){
+    const p=hits[0].point;
+    cd.textContent=`X:${p.x.toFixed(3)} Y:${p.y.toFixed(3)} Z:${p.z.toFixed(3)}`;
+  } else { cd.textContent=''; }
+});
+
+// ══════════════════════════════════════════════════════════════
+// Animation Loop
+// ══════════════════════════════════════════════════════════════
+let t=0;
+function animate(){
+  requestAnimationFrame(animate);
+  t+=0.008;
+  updateCameraAnim();
+  controls.update();
+
+  if(flowGroup&&STATE.showFlow){
+    flowGroup.children.forEach((child,i)=>{
+      if(child.material) child.material.opacity=0.35+0.25*Math.sin(t*3+i*0.4);
+    });
+  }
+  renderer.render(scene,camera);
+}
+
+// ══════════════════════════════════════════════════════════════
+// Controls Handlers
+// ══════════════════════════════════════════════════════════════
+const NACA_PRESETS = [
+  '2412','4412','6412','9412','2415','4415','4418','4421',
+  '9422','9420','9416','9408','6412','8412','9322','9508',
+  '0012','2408','4406','6418','9424','5412','7412','8416',
+];
+
+function searchNaca(val){
+  const q=val.replace(/\D/g,'');
+  const sugg=document.getElementById('naca-suggestions');
+  const list=document.getElementById('naca-sugg-list');
+  if(q.length===0){sugg.style.display='none';return;}
+  const matches=NACA_PRESETS.filter(n=>n.startsWith(q)).slice(0,8);
+  if(matches.length===0){sugg.style.display='none';return;}
+  sugg.style.display='block';
+  list.innerHTML=matches.map(n=>
+    `<span onclick="applyNaca('${n}')"
+      style="padding:3px 8px;background:var(--s2);border:1px solid var(--b2);
+             border-radius:4px;font-size:14px;cursor:pointer;color:var(--tx);
+             font-family:var(--fm);transition:.15s"
+      onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'"
+      onmouseout="this.style.borderColor='var(--b2)';this.style.color='var(--tx)'"
+    >${n}</span>`
+  ).join('');
+}
+
+function applyNaca(val){
+  const cleaned=val.replace(/\D/g,'').slice(0,4);
+  if(cleaned.length!==4) return;
+  document.getElementById('naca-search').value=cleaned;
+  document.getElementById('naca-input').value=cleaned;
+  document.getElementById('naca-show').textContent=cleaned;
+  document.getElementById('naca-suggestions').style.display='none';
+  STATE.naca=cleaned;
+  rebuildWing();
+}
+
+function onNacaChange(val){
+  const cleaned=val.replace(/\D/g,'').slice(0,4);
+  document.getElementById('naca-show').textContent=cleaned||'????';
+  if(cleaned.length===4){ STATE.naca=cleaned; rebuildWing(); }
+}
+
+function onSlider(){
+  STATE.aoa=+document.getElementById('sl-aoa').value;
+  STATE.vel=+document.getElementById('sl-vel').value;
+  STATE.chord=+document.getElementById('sl-chord').value;
+  STATE.span=+document.getElementById('sl-span').value;
+  STATE.rh=+document.getElementById('sl-rh').value/1000;
+  STATE.re=+document.getElementById('sl-re').value;
+  document.getElementById('v-aoa').textContent=STATE.aoa.toFixed(1)+'°';
+  document.getElementById('v-vel').textContent=STATE.vel+' m/s';
+  document.getElementById('v-chord').textContent=STATE.chord.toFixed(2)+' m';
+  document.getElementById('v-span').textContent=STATE.span.toFixed(2)+' m';
+  document.getElementById('v-rh').textContent=(STATE.rh*1000).toFixed(0)+' mm';
+  document.getElementById('v-re').textContent=(STATE.re/1e6).toFixed(2)+'M';
+  rebuildWing();
+}
+
+function setRe(val){
+  document.getElementById('sl-re').value=val;
+  STATE.re=val;
+  document.getElementById('v-re').textContent=(val/1e6).toFixed(2)+'M';
+  rebuildWing();
+}
+
+function toggleFlow(){
+  STATE.showFlow=!STATE.showFlow;
+  document.getElementById('btn-flow').classList.toggle('active',STATE.showFlow);
+  rebuildWing();
+}
+function togglePressure(){
+  STATE.showPressure=!STATE.showPressure;
+  document.getElementById('btn-pressure').classList.toggle('active',STATE.showPressure);
+  rebuildWing();
+}
+function toggleWire(){
+  STATE.wireframe=!STATE.wireframe;
+  document.getElementById('btn-wire').classList.toggle('active',STATE.wireframe);
+  rebuildWing();
+}
+function toggleEndplates(){
+  STATE.showEndplates=!STATE.showEndplates;
+  document.getElementById('btn-endplate').classList.toggle('active',STATE.showEndplates);
+  rebuildWing();
+  toast(STATE.showEndplates?'Endplates ON':'Endplates OFF');
+}
+function toggleMultiElement(){
+  STATE.multiElement=!STATE.multiElement;
+  document.getElementById('btn-multi').classList.toggle('active',STATE.multiElement);
+  rebuildWing();
+  toast(STATE.multiElement?'Multi-element ON':'Multi-element OFF');
+}
+
+// Presets
+function loadPreset(type){
+  const presets={
+    downforce:{naca:'9422',aoa:11.0,vel:85,chord:0.4,span:1.4,re:1300000},
+    lowdrag:  {naca:'2412',aoa:3.0, vel:95,chord:0.25,span:1.0,re:1000000},
+    balanced: {naca:'4412',aoa:6.0, vel:75,chord:0.3, span:1.0,re:1000000},
+    f1:       {naca:'4212',aoa:8.0, vel:80,chord:0.25,span:0.9,re:1300000},
+    gt3:      {naca:'4412',aoa:10.0,vel:70,chord:0.35,span:1.4,re:1000000},
+    lmp:      {naca:'6512',aoa:12.0,vel:90,chord:0.4, span:1.8,re:1500000},
+  };
+  const p=presets[type]; if(!p)return;
+  STATE.naca=p.naca; STATE.aoa=p.aoa; STATE.vel=p.vel;
+  STATE.chord=p.chord; STATE.span=p.span; STATE.re=p.re;
+  document.getElementById('naca-search').value=p.naca;
+  document.getElementById('naca-input').value=p.naca;
+  document.getElementById('naca-show').textContent=p.naca;
+  document.getElementById('sl-aoa').value=p.aoa;
+  document.getElementById('sl-vel').value=p.vel;
+  document.getElementById('sl-chord').value=p.chord;
+  document.getElementById('sl-span').value=p.span;
+  document.getElementById('sl-re').value=p.re;
+  document.getElementById('v-aoa').textContent=p.aoa.toFixed(1)+'°';
+  document.getElementById('v-vel').textContent=p.vel+' m/s';
+  document.getElementById('v-chord').textContent=p.chord.toFixed(2)+' m';
+  document.getElementById('v-span').textContent=p.span.toFixed(2)+' m';
+  document.getElementById('v-re').textContent=(p.re/1e6).toFixed(2)+'M';
+  rebuildWing();
+  toast('Loaded preset: '+type);
+}
+
+// CFD / Python copy
+function copyCFD(){
+  const mode=STATE.mode==='front'?'--mode front ':'';
+  const rh=STATE.mode==='front'?` --ride-height ${STATE.rh}`:'';
+  const cmd=`python geometry_gen.py --naca ${STATE.naca} --aoa ${STATE.aoa} --velocity ${STATE.vel} --chord ${STATE.chord} ${mode}${rh}`.trim();
+  navigator.clipboard.writeText(cmd).then(()=>toast('Copied: '+cmd)).catch(()=>toast(cmd));
+}
+function copyPython(){
+  const cmd=`cd /mnt/d/aerocfd/scripts && python geometry_gen.py --naca ${STATE.naca} --aoa ${STATE.aoa} --velocity ${STATE.vel}`;
+  navigator.clipboard.writeText(cmd).then(()=>toast('Copied!')).catch(()=>toast(cmd));
+}
+
+// Screenshot export
+function exportScreenshot(){
+  renderer.render(scene,camera);
+  const link=document.createElement('a');
+  link.download=`AERO_AI_${STATE.naca}_AoA${STATE.aoa}.png`;
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+  toast('Screenshot saved!');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Export
+// ══════════════════════════════════════════════════════════════
+function exportCSV(){
+  if (!LAST_API_RESPONSE) { toast('⚠ Run a prediction first'); return; }
+  const d = LAST_API_RESPONSE;
+  const q = 0.5 * 1.225 * (d.vel || STATE.vel) ** 2;
+  const ld = d.ld_ratio ?? (d.cl && d.cd ? d.cl/d.cd : 0);
+  const rows = [
+    ['AERO.AI MVP1 Export','aero_ai_v2.0_multifidelity','',''],
+    ['NACA', d.naca ?? STATE.naca, 'AoA', (d.aoa ?? STATE.aoa) + '°'],
+    ['Re', ((d.re ?? STATE.re)/1e6).toFixed(2)+'M', 'Velocity', (d.vel ?? STATE.vel)+'m/s'],
+    ['Chord', STATE.chord+'m', 'Span', STATE.span+'m'],
+    ['','','',''],
+    ['cl', d.cl, 'cd', d.cd],
+    ['cm', d.cm, 'ld_ratio', ld?.toFixed(4)],
+    ['stall_margin', d.stall_margin, 'aero_balance', d.aero_balance],
+    ['confidence', d.confidence, 'confidence_tier', d.confidence_tier],
+    ['inference_ms', d.inference_ms, 'model_version', d.model_version ?? 'aero_ai_v2.0_multifidelity'],
+    ['','','',''],
+    ['Downforce_N_m2', (q * d.cl).toFixed(2), 'Drag_N_m2', (q * d.cd).toFixed(4)],
+    ['Total_downforce_N', (q * d.cl * STATE.chord * STATE.span).toFixed(2), '', ''],
+  ];
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = `AERO_AI_MVP1_${d.naca ?? STATE.naca}_AoA${d.aoa ?? STATE.aoa}.csv`;
+  a.click();
+  toast('MVP1 CSV exported');
+}
+
+async function exportPolar(){
+  toast('Computing polar…');
+  const polar = await computePolarOnnx(STATE.naca, STATE.re);
+  const header='AoA,Cl,Cd,Cm,LD,Cd_lower,Cd_upper';
+  const rows=polar.map(p=>`${p.aoa},${p.Cl},${p.Cd},${p.Cm},${p.LD},${(p.Cd*0.87).toFixed(6)},${(p.Cd*1.13).toFixed(6)}`);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([[header,...rows].join('\n')],{type:'text/csv'}));
+  a.download=`AERO_AI_${STATE.naca}_Re${(STATE.re/1e6).toFixed(1)}M_polar.csv`;
+  a.click();
+  toast('Polar CSV exported');
+}
+
+// ══════════════════════════════════════════════════════════════
+// Keyboard Shortcuts
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  // Skip if typing in an input
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  switch(e.key){
+    case '1': setView('front'); break;
+    case '2': setView('side'); break;
+    case '3': setView('top'); break;
+    case '4': setView('iso'); break;
+    case 'r': case 'R': setView('iso'); STATE.wingRotY=0;STATE.wingRotX=0; if(wingGroup){wingGroup.rotation.y=0;wingGroup.rotation.x=0;} break;
+    case ' ': e.preventDefault(); toggleAutoRotate(); break;
+    case 'e': case 'E': toggleEndplates(); break;
+    case 'm': case 'M': toggleMultiElement(); break;
+    case 'f': case 'F': if(!e.ctrlKey){toggleFlow();} break;
+    case 'p': case 'P': togglePressure(); break;
+    case 'w': case 'W': toggleWire(); break;
+  }
+});
+
+// Show keyboard hints briefly
+setTimeout(()=>{document.getElementById('kb-hints').classList.add('show');
+  setTimeout(()=>document.getElementById('kb-hints').classList.remove('show'),5000);
+},1500);
+
+// CFD History replaced by live session log — see SESSION_HISTORY + updateSessionHistory()
+
+// ══════════════════════════════════════════════════════════════
+// Resize & Boot
+// ══════════════════════════════════════════════════════════════
+function resize(){
+  const vp=document.querySelector('.viewport');
+  const w=vp.clientWidth, h=vp.clientHeight;
+  renderer.setSize(w,h);
+  camera.aspect=w/h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize',resize);
+
+window.addEventListener('load',()=>{
+  resize();
+  controls.update();
+  updateSessionHistory();
+  rebuildWing();
+  animate();
+});
+</script>
+</body>
+</html>
+
